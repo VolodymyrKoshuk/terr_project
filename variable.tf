@@ -215,6 +215,12 @@ variable "subnet_to_jenkins_server" {
     default = 0
 }
 
+variable "user_data_jenkins_server" {
+    description = "User Data for Jenkins Server"
+    type = string
+    default = "../scripts/jenkins_init.sh"
+}
+
 variable "rbd_to_jenkins_server" {
     description = "variable to root block device for jenkins server"
     type = list(any)
