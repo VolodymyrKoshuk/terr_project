@@ -32,3 +32,34 @@ module "vpc" {
   nat_gateway_tags = var.nat_tags_vpc
 
 }
+
+
+# Create Public SG for VPC of Project
+resource "aws_security_group" "public_jenkins_master" {
+  vpc_id = module.vpc.vpc_id
+  name   = var.name_public_sg_jenkins_master
+
+#Rules to ingress trafic
+  dynamic "ingress" {
+    for_each = var.ingress_port_to_jenkins_master_sg
+
+    content {
+      from_port        = ingress.value
+      to_port          = ingress.value
+      protocol         = "tcp"
+      cidr_blocks      = var.cidr_to_ingress_port_jenkins_master
+    }
+  }
+
+
+# Rule for egress to all internet
+  egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = var.cidr_to_egress_port_jenkins_master
+  }
+
+# Tags SG for Jenkins Server 
+  tags = var.tags_sg_jenkins_master
+}

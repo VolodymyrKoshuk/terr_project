@@ -132,3 +132,40 @@ variable "nat_tags_vpc" {
         Name = "NAT GW for Private Subnet in VPC of Project"
   }
 }
+
+
+#Variables to Public Security Group for jenkins Master
+variable "name_public_sg_jenkins_master" {
+    description = "Name to public Security Group for Jenkins Master"
+    type = string
+    default = "Security Group Jenkins Master"
+}
+
+variable "ingress_port_to_jenkins_master_sg" {
+    description = "List ingress port to public servers"
+    type = list(string)
+    default = ["8080", "22"]
+}
+
+variable "cidr_to_ingress_port_jenkins_master" {
+    description = "CIDR Block to ingress ports to jenkins Server"
+    type = list(string)
+    default = ["0.0.0.0/0"]
+}
+
+variable "cidr_to_egress_port_jenkins_master" {
+    description = "CIDR Block to egress trafic to network"
+    type = list(string)
+    default = ["0.0.0.0/0"]
+}
+
+variable "tags_sg_jenkins_master" {
+    description = "Tags to Seurity Group for Jenkins Server"
+    type = map
+    default = {
+        Role = "Security group for Jenkins Server"
+        Terraform = true
+        education = true
+        course    = "Course Project"
+  }
+}
