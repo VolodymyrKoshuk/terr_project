@@ -169,3 +169,71 @@ variable "tags_sg_jenkins_master" {
         course    = "Course Project"
   }
 }
+
+
+# Variables for Jenkins Server
+
+variable "number_of_master_jenkins_servers" {
+    description = "variable to multiple create Jenkins Master Servers"
+    type = list
+    default = ["first"]
+}
+
+variable "name_jenkins_server" {
+    description = "variable to name jenkins server"
+    type = string
+    default = "Jenkins Master"
+}
+
+variable "instance_type_jenkins_server" {
+    description = "variable to instance type jenkins server"
+    type = string
+    default = "t3.micro"
+}
+
+variable "key_name_jenkins_server" {
+    description = "variable to key_name jenkins server"
+    type = string
+    default = "vova-key-linuxaws-prod-stokholm"
+}
+
+variable "associate_pub_ip_jenkins_server" {
+    description = "variable to associate public ip address to jenkins server"
+    type = bool
+    default = true
+}
+
+variable "iam_instance_profile_jenkins_server" {
+    description = "variable to iam instance profile jenkins servers"
+    type = string
+    default = "AmazonSSMRoleForInstancesQuickSetup"
+}
+
+variable "subnet_to_jenkins_server" {
+    description = "variable to subnet to jenkins server (0=subnet-a, 1=subnet-b, 2=subnet-c)"
+    type = number
+    default = 0
+}
+
+variable "rbd_to_jenkins_server" {
+    description = "variable to root block device for jenkins server"
+    type = list(any)
+    default = [
+    {
+      volume_type           = "gp3"
+      volume_size           = "10"
+      delete_on_termination = "true"
+    }
+  ]
+}
+
+variable "default_tags_to_jenkins_server" {
+    description = "Common Tags to apply to Module ec2_jenkins_server"
+    type = map
+    default = {
+    Role      = "Jenkins Server"
+    Terraform = true
+    education = true
+    course    = "Course Project"
+  }
+}

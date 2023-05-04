@@ -63,3 +63,38 @@ resource "aws_security_group" "public_jenkins_master" {
 # Tags SG for Jenkins Server 
   tags = var.tags_sg_jenkins_master
 }
+
+# Search ami of Amazon Linux 2
+data "aws_ami" "amazon_linux2" {
+  owners = ["137112412989"]
+  most_recent = true
+
+  filter {
+    name = "name"
+    values = ["amzn2-ami-kernel-*"]
+  }
+}
+
+
+# Create Jenkins Server
+module "ec2_jenkins_server" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "5.0.0"
+
+  for_each = toset(var.number_of_master_jenkins_servers)
+
+  name                        = "${var.name_jenkins_server} #${each.value}"
+  ami                         = data.aws_ami.amazon_linux2.id  
+  instance_type               = var.instance_type_jenkins_server
+  key_name                    = var.key_name_jenkins_server
+  associate_public_ip_address = var.associate_pub_ip_jenkins_server
+  iam_instance_profile        = var.iam_instance_profile_jenkins_server
+  vpc_security_group_ids      = [aws_security_group.public_jenkins_master.id]
+  subnet_id                   = module.vpc.public_subnets[var.subnet_to_jenkins_server]
+
+  root_block_device           = var.rbd_to_jenkins_server
+
+  tags                        = var.default_tags_to_jenkins_server
+
+}
+
