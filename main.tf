@@ -64,17 +64,6 @@ resource "aws_security_group" "public_jenkins_master" {
   tags = var.tags_sg_jenkins_master
 }
 
-# Search ami of Amazon Linux 2
-data "aws_ami" "amazon_linux2" {
-  owners = ["137112412989"]
-  most_recent = true
-
-  filter {
-    name = "name"
-    values = ["amzn2-ami-kernel-*"]
-  }
-}
-
 
 # Create Jenkins Server
 module "ec2_jenkins_server" {
@@ -84,7 +73,7 @@ module "ec2_jenkins_server" {
   for_each = toset(var.number_of_master_jenkins_servers)
 
   name                        = "${var.name_jenkins_server} #${each.value}"
-  ami                         = data.aws_ami.amazon_linux2.id  
+  ami                         = var.ami_jenkins_server  
   instance_type               = var.instance_type_jenkins_server
   key_name                    = var.key_name_jenkins_server
   associate_public_ip_address = var.associate_pub_ip_jenkins_server

@@ -185,6 +185,12 @@ variable "name_jenkins_server" {
     default = "Jenkins Master"
 }
 
+variable "ami_jenkins_server" {
+    description = "ami to Jenkins Server"
+    type = string
+    default = "ami-0cf13cb849b11b451"
+}
+
 variable "instance_type_jenkins_server" {
     description = "variable to instance type jenkins server"
     type = string
