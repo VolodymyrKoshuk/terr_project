@@ -80,7 +80,6 @@ module "ec2_jenkins_server" {
   iam_instance_profile        = var.iam_instance_profile_jenkins_server
   vpc_security_group_ids      = [aws_security_group.public_jenkins_master.id]
   subnet_id                   = module.vpc.public_subnets[var.subnet_to_jenkins_server]
-  user_data                   = file(var.user_data_jenkins_server)
 
   root_block_device           = var.rbd_to_jenkins_server
 
