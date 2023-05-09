@@ -34,7 +34,7 @@ module "vpc" {
 }
 
 
-# Create Public SG for VPC of Project
+# Create Public SG for VPC of Project to Jenkins Master
 resource "aws_security_group" "public_jenkins_master" {
   vpc_id = module.vpc.vpc_id
   name   = var.name_public_sg_jenkins_master
@@ -65,6 +65,38 @@ resource "aws_security_group" "public_jenkins_master" {
 }
 
 
+
+# Create SG for VPC of Project Jenkins Agent
+resource "aws_security_group" "public_jenkins_node" {
+  vpc_id = module.vpc.vpc_id
+  name   = var.name_sg_jenkins_node
+
+#Rules to ingress trafic
+  dynamic "ingress" {
+    for_each = var.ingress_port_to_jenkins_node_sg
+
+    content {
+      from_port        = ingress.value
+      to_port          = ingress.value
+      protocol         = "tcp"
+      cidr_blocks      = var.cidr_to_ingress_port_jenkins_node
+    }
+  }
+
+
+# Rule for egress to all internet
+  egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = var.cidr_to_egress_port_jenkins_node
+  }
+
+# Tags SG for Jenkins Agent Server 
+  tags = var.tags_sg_jenkins_node
+}
+
+
 # Create Jenkins Server
 module "ec2_jenkins_server" {
   source  = "terraform-aws-modules/ec2-instance/aws"
@@ -84,6 +116,29 @@ module "ec2_jenkins_server" {
   root_block_device           = var.rbd_to_jenkins_server
 
   tags                        = var.default_tags_to_jenkins_server
+
+}
+
+
+# Create Jenkins Node Ansible Server
+module "ec2_jenkins_node_ansible" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "5.0.0"
+
+  for_each = toset(var.number_of_ansible_jenkins_servers)
+
+  name                        = "${var.name_jenkins_ansible_server} #${each.value}"
+  ami                         = var.ami_jenkins_ansible_server  
+  instance_type               = var.instance_type_jenkins_ansible_server
+  key_name                    = var.key_name_jenkins_ansible_server
+  associate_public_ip_address = var.associate_pub_ip_jenkins_ansible_server
+  iam_instance_profile        = var.iam_instance_profile_jenkins_ansible_server
+  vpc_security_group_ids      = [aws_security_group.public_jenkins_node.id]
+  subnet_id                   = module.vpc.public_subnets[var.subnet_to_jenkins_ansible_server]
+
+  root_block_device           = var.rbd_to_jenkins_ansible_server
+
+  tags                        = var.default_tags_to_jenkins_ansible_server
 
 }
 

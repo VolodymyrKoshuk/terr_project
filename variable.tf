@@ -133,18 +133,19 @@ variable "nat_tags_vpc" {
   }
 }
 
+#-------------------------------------------------------------------------------
 
 #Variables to Public Security Group for jenkins Master
 variable "name_public_sg_jenkins_master" {
     description = "Name to public Security Group for Jenkins Master"
     type = string
-    default = "Security Group Jenkins Master"
+    default = "Security Group of Jenkins Master"
 }
 
 variable "ingress_port_to_jenkins_master_sg" {
     description = "List ingress port to public servers"
     type = list(string)
-    default = ["8080", "22"]
+    default = ["8080", "22", "50000"]
 }
 
 variable "cidr_to_ingress_port_jenkins_master" {
@@ -170,6 +171,47 @@ variable "tags_sg_jenkins_master" {
   }
 }
 
+
+#-------------------------------------------------------------------------------
+
+#Variables to Public Security Group for jenkins Agents
+variable "name_sg_jenkins_node" {
+    description = "Name to public Security Group for Jenkins Node"
+    type = string
+    default = "Security Group of Jenkins Node"
+}
+
+variable "ingress_port_to_jenkins_node_sg" {
+    description = "List ingress port to jenkins node servers"
+    type = list(string)
+    default = ["50000", "22"]
+}
+
+variable "cidr_to_ingress_port_jenkins_node" {
+    description = "CIDR Block to ingress ports to Jenkins Node"
+    type = list(string)
+    default = ["10.24.0.0/16"]
+}
+
+variable "cidr_to_egress_port_jenkins_node" {
+   description = "CIDR Block to egress trafic to Jenkins Nodes"
+    type = list(string)
+    default = ["0.0.0.0/0"]
+}
+
+variable "tags_sg_jenkins_node" {
+    description = "Tags to Seurity Group for Jenkins Server"
+    type = map
+    default = {
+        Role = "Security group for Jenkins Node Servers"
+        Terraform = true
+        education = true
+        course    = "Course Project"
+  }
+}
+
+
+#-------------------------------------------------------------------------------
 
 # Variables for Jenkins Server
 
@@ -221,12 +263,6 @@ variable "subnet_to_jenkins_server" {
     default = 0
 }
 
-variable "user_data_jenkins_server" {
-    description = "User Data for Jenkins Server"
-    type = string
-    default = "../scripts/jenkins_init.sh"
-}
-
 variable "rbd_to_jenkins_server" {
     description = "variable to root block device for jenkins server"
     type = list(any)
@@ -244,6 +280,83 @@ variable "default_tags_to_jenkins_server" {
     type = map
     default = {
     Role      = "Jenkins Server"
+    Terraform = true
+    education = true
+    course    = "Course Project"
+  }
+}
+
+#-------------------------------------------------------------------------------
+
+# Variables for Jenkins Node Ansible Server
+
+variable "number_of_ansible_jenkins_servers" {
+    description = "variable to multiple create Jenkins Node Ansible Servers"
+    type = list
+    default = ["first"]
+}
+
+variable "name_jenkins_ansible_server" {
+    description = "variable to name jenkins node ansible server"
+    type = string
+    default = "Jenkins Agent Ansible"
+}
+
+variable "ami_jenkins_ansible_server" {
+    description = "ami to Jenkins Node Ansible Server"
+    type = string
+    default = "ami-0cf13cb849b11b451"
+}
+
+variable "instance_type_jenkins_ansible_server" {
+    description = "variable to instance type jenkins ansible server"
+    type = string
+    default = "t3.micro"
+}
+
+variable "key_name_jenkins_ansible_server" {
+    description = "variable to key_name jenkins ansible server"
+    type = string
+    default = "vova-key-linuxaws-prod-stokholm"
+}
+
+variable "associate_pub_ip_jenkins_ansible_server" {
+    description = "variable to associate public ip address to jenkins node ansible server"
+    type = bool
+    default = true
+}
+
+variable "iam_instance_profile_jenkins_ansible_server" {
+    description = "variable to iam instance profile jenkins node ansible servers"
+    type = string
+    default = "ReadOnlyEC2AndECR"
+}
+
+variable "subnet_to_jenkins_ansible_server" {
+    description = "variable to subnet to jenkins ansible server (0=subnet-a, 1=subnet-b, 2=subnet-c)"
+    type = number
+    default = 1
+}
+
+variable "rbd_to_jenkins_ansible_server" {
+    description = "variable to root block device for jenkins ansible server"
+    type = list(any)
+    default = [
+    {
+      volume_type           = "gp3"
+      volume_size           = "8"
+      delete_on_termination = "true"
+    }
+  ]
+}
+
+variable "default_tags_to_jenkins_ansible_server" {
+    description = "Common Tags to apply to Module ec2_jenkins_node_ansible"
+    type = map
+    default = {
+    Role      = "Jenkins Agent"
+    Ansible   = true
+    AWSCLI    = false
     Terraform = true
     education = true
     course    = "Course Project"
