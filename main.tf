@@ -67,7 +67,7 @@ resource "aws_security_group" "public_jenkins_master" {
 
 
 # Create SG for VPC of Project Jenkins Agent
-resource "aws_security_group" "public_jenkins_node" {
+resource "aws_security_group" "jenkins_node" {
   vpc_id = module.vpc.vpc_id
   name   = var.name_sg_jenkins_node
 
@@ -133,12 +133,35 @@ module "ec2_jenkins_node_ansible" {
   key_name                    = var.key_name_jenkins_ansible_server
   associate_public_ip_address = var.associate_pub_ip_jenkins_ansible_server
   iam_instance_profile        = var.iam_instance_profile_jenkins_ansible_server
-  vpc_security_group_ids      = [aws_security_group.public_jenkins_node.id]
+  vpc_security_group_ids      = [aws_security_group.jenkins_node.id]
   subnet_id                   = module.vpc.public_subnets[var.subnet_to_jenkins_ansible_server]
 
   root_block_device           = var.rbd_to_jenkins_ansible_server
 
   tags                        = var.default_tags_to_jenkins_ansible_server
+
+}
+
+
+# Create Jenkins Node AWSCLI Server
+module "ec2_jenkins_node_awscli" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  version = "5.0.0"
+
+  for_each = toset(var.number_of_awscli_jenkins_servers)
+
+  name                        = "${var.name_jenkins_awscli_server} #${each.value}"
+  ami                         = var.ami_jenkins_awscli_server  
+  instance_type               = var.instance_type_jenkins_awscli_server
+  key_name                    = var.key_name_jenkins_awscli_server
+  associate_public_ip_address = var.associate_pub_ip_jenkins_awscli_server
+  iam_instance_profile        = var.iam_instance_profile_jenkins_awscli_server
+  vpc_security_group_ids      = [aws_security_group.jenkins_node.id]
+  subnet_id                   = module.vpc.public_subnets[var.subnet_to_jenkins_awsclie_server]
+
+  root_block_device           = var.rbd_to_jenkins_awscli_server
+
+  tags                        = var.default_tags_to_jenkins_awscli_server
 
 }
 

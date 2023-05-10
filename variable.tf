@@ -362,3 +362,81 @@ variable "default_tags_to_jenkins_ansible_server" {
     course    = "Course Project"
   }
 }
+
+
+#-------------------------------------------------------------------------------
+
+# Variables for Jenkins Node AWSCLI Server
+
+variable "number_of_awscli_jenkins_servers" {
+    description = "variable to multiple create Jenkins Node AWSCLI Servers"
+    type = list
+    default = ["first"]
+}
+
+variable "name_jenkins_awscli_server" {
+    description = "variable to name jenkins node awscli server"
+    type = string
+    default = "Jenkins Agent AWSCLI"
+}
+
+variable "ami_jenkins_awscli_server" {
+    description = "ami to Jenkins Node AWSCLI Server"
+    type = string
+    default = "ami-0993a5ffcf00a7172"
+}
+
+variable "instance_type_jenkins_awscli_server" {
+    description = "variable to instance type jenkins awscli server"
+    type = string
+    default = "t3.micro"
+}
+
+variable "key_name_jenkins_awscli_server" {
+    description = "variable to key_name jenkins awscli server"
+    type = string
+    default = "vova-key-linuxaws-prod-stokholm"
+}
+
+variable "associate_pub_ip_jenkins_awscli_server" {
+    description = "variable to associate public ip address to jenkins node awscli server"
+    type = bool
+    default = true
+}
+
+variable "iam_instance_profile_jenkins_awscli_server" {
+    description = "variable to iam instance profile jenkins node awscli servers"
+    type = string
+    default = "ECRSSMRoleForEC2"
+}
+
+variable "subnet_to_jenkins_awsclie_server" {
+    description = "variable to subnet to jenkins awscli server (0=subnet-a, 1=subnet-b, 2=subnet-c)"
+    type = number
+    default = 2
+}
+
+variable "rbd_to_jenkins_awscli_server" {
+    description = "variable to root block device for jenkins awscli server"
+    type = list(any)
+    default = [
+    {
+      volume_type           = "gp3"
+      volume_size           = "8"
+      delete_on_termination = "true"
+    }
+  ]
+}
+
+variable "default_tags_to_jenkins_awscli_server" {
+    description = "Common Tags to apply to Module ec2_jenkins_node_awscli"
+    type = map
+    default = {
+    Role      = "Jenkins Agent"
+    Ansible   = true
+    AWSCLI    = false
+    Terraform = true
+    education = true
+    course    = "Course Project"
+  }
+}
