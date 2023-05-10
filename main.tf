@@ -165,3 +165,16 @@ module "ec2_jenkins_node_awscli" {
 
 }
 
+
+# Create ECR for node.js app
+
+resource "aws_ecr_repository" "nodejs_app" {
+  name                 = var.name_ecr_nodejs_app1
+  image_tag_mutability = var.mutability_ecr_nodejs_app1
+
+  image_scanning_configuration {
+    scan_on_push = var.scanning_ecr_nodejs_app1
+  }
+  
+  tags = var.default_tags_to_ecr_nodejs_app1
+}

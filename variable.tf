@@ -440,3 +440,37 @@ variable "default_tags_to_jenkins_awscli_server" {
     course    = "Course Project"
   }
 }
+
+
+#------------------------------------------------------------------------------
+
+# ECR node.js app1 
+
+variable "name_ecr_nodejs_app1" {
+    description = "Name for ecr node.js app1"
+    type = string
+    default = "nodejs_app1"
+}
+
+variable "mutability_ecr_nodejs_app1" {
+    description = "Mutable configuration to git tag for ecr node.js app1"
+    type = string
+    default = "MUTABLE"
+}
+
+variable "scanning_ecr_nodejs_app1" {
+    description = "Image scanning configuration for ecr node.js app1"
+    type = bool
+    default = true
+}
+
+variable "default_tags_to_ecr_nodejs_app1" {
+    description = "Common Tags to apply to ecr node.js app1"
+    type = map
+    default = {
+    Terraform = true
+    Role      = "ECR for node.js app1"
+    education = true
+    course    = "Course Project"
+  }
+}
