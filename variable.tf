@@ -230,7 +230,7 @@ variable "name_jenkins_server" {
 variable "ami_jenkins_server" {
     description = "ami to Jenkins Server"
     type = string
-    default = "ami-0ee3b62577567f454"
+    default = "ami-0e8db675da589305b"
 }
 
 variable "instance_type_jenkins_server" {
@@ -305,7 +305,7 @@ variable "name_jenkins_ansible_server" {
 variable "ami_jenkins_ansible_server" {
     description = "ami to Jenkins Node Ansible Server"
     type = string
-    default = "ami-0993a5ffcf00a7172"
+    default = "ami-0ba0ca82473cad617"
 }
 
 variable "instance_type_jenkins_ansible_server" {
@@ -383,7 +383,7 @@ variable "name_jenkins_awscli_server" {
 variable "ami_jenkins_awscli_server" {
     description = "ami to Jenkins Node AWSCLI Server"
     type = string
-    default = "ami-0993a5ffcf00a7172"
+    default = "ami-0227d0a27936ca5ef"
 }
 
 variable "instance_type_jenkins_awscli_server" {
