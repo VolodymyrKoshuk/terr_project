@@ -163,6 +163,8 @@ module "ec2_jenkins_node_awscli" {
 
   tags                        = var.default_tags_to_jenkins_awscli_server
 
+
+  depends_on = [aws_ecr_repository.nodejs_app1]
 }
 
 
