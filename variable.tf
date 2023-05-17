@@ -474,3 +474,19 @@ variable "default_tags_to_ecr_nodejs_app1" {
     course    = "Course Project"
   }
 }
+
+
+#-----------------------------------------------------------------------------------
+
+#Variables for S3 bucket
+variable "bucket_name_dev" {
+  description = "Name of the S3 bucket for dev environment"
+  type        = string
+  default     = "koshuk-bucket-dev"
+}
+
+variable "bucket_name_prod" {
+  description = "Name of the S3 bucket for prod environment"
+  type        = string
+  default     = "koshuk-bucket-prod"
+}

@@ -180,3 +180,91 @@ resource "aws_ecr_repository" "nodejs_app1" {
   
   tags = var.default_tags_to_ecr_nodejs_app1
 }
+
+
+#Create S3 bucket for CloudFront dev
+resource "aws_s3_bucket" "bucket_dev" {
+  bucket = var.bucket_name_dev
+  acl    = "private"
+}
+
+#Create S3 bucket for CloudFront prod
+resource "aws_s3_bucket" "bucket_prod" {
+  bucket = var.bucket_name_prod
+  acl    = "private"
+}
+
+
+#Create CloudFront
+resource "aws_cloudfront_distribution" "website_distribution" {
+  origin {
+    domain_name = aws_s3_bucket.bucket_prod.bucket_regional_domain_name
+    origin_id   = "prod"
+    origin_path = ""
+  }
+
+  origin {
+    domain_name = aws_s3_bucket.bucket_dev.bucket_regional_domain_name
+    origin_id   = "dev"
+    origin_path = ""
+  }
+
+  enabled             = true
+  is_ipv6_enabled     = true
+  http_version        = "http2"
+  default_root_object = "index.html"
+
+  default_cache_behavior {
+    target_origin_id = "prod"
+
+    viewer_protocol_policy     = "redirect-to-https"
+    allowed_methods            = ["GET", "HEAD"]
+    cached_methods             = ["GET", "HEAD"]
+    forwarded_values {
+      query_string = false
+      cookies {
+        forward = "none"
+      }
+    }
+
+    min_ttl                = 0
+    default_ttl            = 3600
+    max_ttl                = 86400
+    compress               = true
+  }
+
+  ordered_cache_behavior {
+    path_pattern     = "/dev/*"
+    target_origin_id = "dev"
+
+    viewer_protocol_policy     = "redirect-to-https"
+    allowed_methods            = ["GET", "HEAD"]
+    cached_methods             = ["GET", "HEAD"]
+    forwarded_values {
+      query_string = false
+      cookies {
+        forward = "none"
+      }
+    }
+
+    min_ttl                = 0
+    default_ttl            = 3600
+    max_ttl                = 86400
+    compress               = true
+  }
+
+  restrictions {
+    geo_restriction {
+      restriction_type = "none"
+    }
+  }
+
+  viewer_certificate {
+    cloudfront_default_certificate = true
+  }
+
+  tags = {
+    Role      = "website distribution"
+    Terraform = true
+  }
+}

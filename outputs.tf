@@ -13,3 +13,7 @@ output "public_ip_jenkins_awscli_nodes" {
 output "url_ecr_nodejs_app1" {
     value = aws_ecr_repository.nodejs_app1.repository_url
 }
+
+output "domain_name_for_cloudfront" {
+    value = aws_cloudfront_distribution.website_distribution.domain_name
+}
