@@ -17,3 +17,8 @@ output "url_ecr_nodejs_app1" {
 output "domain_name_for_cloudfront" {
     value = aws_cloudfront_distribution.website_distribution.domain_name
 }
+
+output "id_for_cloudfront" {
+    value = aws_cloudfront_distribution.website_distribution.id
+}
+

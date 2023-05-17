@@ -1,4 +1,3 @@
-
 # Create VPC 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
@@ -201,12 +200,18 @@ resource "aws_cloudfront_distribution" "website_distribution" {
     domain_name = aws_s3_bucket.bucket_prod.bucket_regional_domain_name
     origin_id   = "prod"
     origin_path = ""
+    s3_origin_config {
+      origin_access_identity = aws_cloudfront_origin_access_identity.access_prod.cloudfront_access_identity_path
+    }
   }
 
   origin {
     domain_name = aws_s3_bucket.bucket_dev.bucket_regional_domain_name
     origin_id   = "dev"
     origin_path = ""
+    s3_origin_config {
+      origin_access_identity = aws_cloudfront_origin_access_identity.access_dev.cloudfront_access_identity_path
+    }
   }
 
   enabled             = true
@@ -267,4 +272,52 @@ resource "aws_cloudfront_distribution" "website_distribution" {
     Role      = "website distribution"
     Terraform = true
   }
+}
+
+
+resource "aws_cloudfront_origin_access_identity" "access_prod" {}
+
+resource "aws_cloudfront_origin_access_identity" "access_dev" {}
+
+
+resource "aws_s3_bucket_policy" "bucket_policy_prod" {
+  bucket = "${aws_s3_bucket.bucket_prod.id}"
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Id": "CloudFrontAccessPolicy",
+  "Statement": [
+    {
+      "Sid": "AllowCloudFrontAccess",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "${aws_cloudfront_origin_access_identity.access_prod.iam_arn}"
+      },
+      "Action": "s3:GetObject",
+      "Resource": "${aws_s3_bucket.bucket_prod.arn}/*"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_s3_bucket_policy" "bucket_policy_dev" {
+  bucket = "${aws_s3_bucket.bucket_dev.id}"
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Id": "CloudFrontAccessPolicy",
+  "Statement": [
+    {
+      "Sid": "AllowCloudFrontAccess",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "${aws_cloudfront_origin_access_identity.access_dev.iam_arn}"
+      },
+      "Action": "s3:GetObject",
+      "Resource": "${aws_s3_bucket.bucket_dev.arn}/*"
+    }
+  ]
+}
+EOF
 }

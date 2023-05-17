@@ -475,7 +475,6 @@ variable "default_tags_to_ecr_nodejs_app1" {
   }
 }
 
-
 #-----------------------------------------------------------------------------------
 
 #Variables for S3 bucket
