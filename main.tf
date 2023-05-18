@@ -196,7 +196,7 @@ resource "aws_s3_bucket" "bucket_prod" {
   acl    = "private"
 }
 
-/*
+
 #Create CloudFront
 resource "aws_cloudfront_distribution" "website_distribution" {
   origin {
@@ -324,4 +324,3 @@ resource "aws_s3_bucket_policy" "bucket_policy_dev" {
 }
 EOF
 }
-*/
