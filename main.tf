@@ -111,6 +111,7 @@ module "ec2_jenkins_server" {
   iam_instance_profile        = var.iam_instance_profile_jenkins_server
   vpc_security_group_ids      = [aws_security_group.public_jenkins_master.id]
   subnet_id                   = module.vpc.public_subnets[var.subnet_to_jenkins_server]
+  private_ip                  = var.private_ip_jenkins_master_server
 
   root_block_device           = var.rbd_to_jenkins_server
 
@@ -134,6 +135,7 @@ module "ec2_jenkins_node_ansible" {
   iam_instance_profile        = var.iam_instance_profile_jenkins_ansible_server
   vpc_security_group_ids      = [aws_security_group.jenkins_node.id]
   subnet_id                   = module.vpc.public_subnets[var.subnet_to_jenkins_ansible_server]
+  private_ip                  = var.private_ip_jenkins_ansible_server
 
   root_block_device           = var.rbd_to_jenkins_ansible_server
 
@@ -157,6 +159,7 @@ module "ec2_jenkins_node_awscli" {
   iam_instance_profile        = var.iam_instance_profile_jenkins_awscli_server
   vpc_security_group_ids      = [aws_security_group.jenkins_node.id]
   subnet_id                   = module.vpc.public_subnets[var.subnet_to_jenkins_awsclie_server]
+  private_ip                  = var.private_ip_jenkins_awsclie_server
 
   root_block_device           = var.rbd_to_jenkins_awscli_server
 

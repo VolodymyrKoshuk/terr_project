@@ -263,6 +263,12 @@ variable "subnet_to_jenkins_server" {
     default = 0
 }
 
+variable "private_ip_jenkins_master_server" {
+    description = "variable to associated private ip to jenkins master server)"
+    type = string
+    default = "10.24.11.101/24"
+}
+
 variable "rbd_to_jenkins_server" {
     description = "variable to root block device for jenkins server"
     type = list(any)
@@ -336,6 +342,12 @@ variable "subnet_to_jenkins_ansible_server" {
     description = "variable to subnet to jenkins ansible server (0=subnet-a, 1=subnet-b, 2=subnet-c)"
     type = number
     default = 1
+}
+
+variable "private_ip_jenkins_ansible_server" {
+    description = "variable to associated private ip to jenkins ansible server)"
+    type = string
+    default = "10.24.21.101/24"
 }
 
 variable "rbd_to_jenkins_ansible_server" {
@@ -414,6 +426,12 @@ variable "subnet_to_jenkins_awsclie_server" {
     description = "variable to subnet to jenkins awscli server (0=subnet-a, 1=subnet-b, 2=subnet-c)"
     type = number
     default = 2
+}
+
+variable "private_ip_jenkins_awsclie_server" {
+    description = "variable to associated private ip to jenkins awscli server)"
+    type = string
+    default = "10.24.31.101/24"
 }
 
 variable "rbd_to_jenkins_awscli_server" {
